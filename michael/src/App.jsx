@@ -372,7 +372,7 @@ function App() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/messages", {
+      const response = await fetch("https://michael-portfolio-p6qk.onrender.com/api/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,10 +11,14 @@ app.use(express.json());
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "michael_portfolio",
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Connect to MySQL
@@ -25,6 +29,26 @@ db.connect((err) => {
   }
 
   console.log("Connected to MySQL!");
+});
+
+// Create messages table if it doesn't exist
+const createTableSQL = `
+  CREATE TABLE IF NOT EXISTS messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`;
+
+db.query(createTableSQL, (err) => {
+  if (err) {
+    console.error("Error creating messages table:", err);
+  } else {
+    console.log("Messages table is ready!");
+  }
 });
 
 // Test route
